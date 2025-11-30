@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Video, Plus, Trash2, Edit, Loader2, Calendar, Settings, Headphones } from "lucide-react";
+import { Users, Video, Plus, Trash2, Edit, Loader2, Calendar, Settings, Headphones, Lock, LogOut } from "lucide-react";
 
 type Video = {
   id: string;
@@ -49,6 +49,9 @@ type MinistrySettings = {
 export default function Admin() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [addVideoOpen, setAddVideoOpen] = useState(false);
   const [editVideoOpen, setEditVideoOpen] = useState(false);
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
@@ -89,6 +92,54 @@ export default function Admin() {
     phone: "",
     message: "",
   });
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch("/api/admin/check");
+      const data = await res.json();
+      setIsAuthenticated(data.isAuthenticated);
+    } catch (error) {
+      setIsAuthenticated(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: loginPassword }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setIsAuthenticated(true);
+        setLoginPassword("");
+        toast({ title: "Welcome", description: "You are now logged in." });
+      } else {
+        toast({ title: "Login Failed", description: data.error || "Invalid password", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to login. Please try again.", variant: "destructive" });
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+      setIsAuthenticated(false);
+      toast({ title: "Logged Out", description: "You have been logged out successfully." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to logout.", variant: "destructive" });
+    }
+  };
 
   const { data: videos = [], isLoading: videosLoading, isError: videosError } = useQuery<Video[]>({
     queryKey: ["videos"],
@@ -370,6 +421,62 @@ export default function Admin() {
     "deliverance": "Deliverance",
   };
 
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-background font-sans text-foreground flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background font-sans text-foreground">
+        <Navbar />
+        <main className="pt-32 pb-24 container mx-auto px-4 flex items-center justify-center min-h-[60vh]">
+          <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <Lock className="w-8 h-8 text-primary" />
+              </div>
+              <CardTitle className="font-serif text-2xl">Admin Login</CardTitle>
+              <CardDescription>Enter your password to access the dashboard</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter admin password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    required
+                    data-testid="input-admin-password"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary text-white" 
+                  disabled={loginLoading}
+                  data-testid="button-admin-login"
+                >
+                  {loginLoading ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Logging in...</>
+                  ) : (
+                    "Login"
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <Navbar />
@@ -380,6 +487,15 @@ export default function Admin() {
             <h1 className="text-3xl font-serif font-bold text-primary" data-testid="text-admin-title">Ministry Dashboard</h1>
             <p className="text-muted-foreground">Manage your content, events, and registrations.</p>
           </div>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              data-testid="button-admin-logout"
+            >
+              <LogOut className="w-4 h-4 mr-2" /> Logout
+            </Button>
           <Dialog open={addVideoOpen} onOpenChange={setAddVideoOpen}>
             <DialogTrigger asChild>
               <Button className="bg-primary text-white" data-testid="button-add-video">
@@ -455,6 +571,7 @@ export default function Admin() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
