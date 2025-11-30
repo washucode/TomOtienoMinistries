@@ -1,21 +1,12 @@
 import { Link } from "wouter";
 import { Menu } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "@assets/logo_1764501374554.png";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const links = [
     { name: "Home", href: "/" },
@@ -34,13 +25,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav 
-      className={`fixed top-0 z-50 w-full transition-all duration-300 h-24 flex items-center ${
-        isScrolled 
-          ? "bg-background/90 backdrop-blur-md shadow-sm" 
-          : "bg-transparent"
-      }`}
-    >
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md h-24 flex items-center">
       <div className="container mx-auto flex items-center justify-between px-4">
         <Link href="/">
           <a className="flex items-center gap-2">
