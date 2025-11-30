@@ -27,6 +27,7 @@ export const videos = pgTable("videos", {
   thumbnail: text("thumbnail"),
   duration: text("duration"),
   views: text("views").default("0 views"),
+  publishedAt: timestamp("published_at"), // YouTube publish date
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

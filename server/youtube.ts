@@ -164,6 +164,7 @@ export class YouTubeService {
       thumbnail: string;
       duration: string;
       views: string;
+      publishedAt: string;
     }> 
   }> {
     if (!this.apiKey) {
@@ -193,7 +194,8 @@ export class YouTubeService {
       category: categorizeVideo(video.title),
       thumbnail: video.thumbnail || `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`,
       duration: video.duration,
-      views: "0 views"
+      views: "0 views",
+      publishedAt: video.publishedAt
     }));
 
     return { videos };

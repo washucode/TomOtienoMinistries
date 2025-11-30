@@ -73,7 +73,7 @@ export class DatabaseStorage implements IStorage {
 
   // Video methods
   async getAllVideos(): Promise<Video[]> {
-    return db.select().from(videos).orderBy(desc(videos.createdAt));
+    return db.select().from(videos).orderBy(desc(videos.publishedAt), desc(videos.createdAt));
   }
 
   async getVideo(id: string): Promise<Video | undefined> {

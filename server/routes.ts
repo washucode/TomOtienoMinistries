@@ -287,7 +287,8 @@ export async function registerRoutes(
             category: video.category,
             thumbnail: video.thumbnail,
             duration: video.duration,
-            views: video.views
+            views: video.views,
+            publishedAt: video.publishedAt ? new Date(video.publishedAt) : undefined
           });
           added++;
           existingIds.add(video.videoId);
