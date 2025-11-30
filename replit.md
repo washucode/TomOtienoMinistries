@@ -126,10 +126,12 @@ Current implementation includes user table structure but no active authenticatio
 - Real-time Dashboard Stats: Video count, registration count, active/upcoming programs
 - Registration Count Tracking: Automatic increment/decrement with add/delete operations
 
-**Spotify Integration:**
-- Status: Not yet implemented
-- When ready: Spotify Show ID can be stored in database and used for podcast feed display
-- Note: User dismissed integration setup; can be added manually via admin panel in future
+**Podcast/Spotify Integration:**
+- Status: Fully implemented with admin panel management
+- Admin Panel: Go to Admin > Podcast tab to add Spotify Show ID and RSS URL
+- Homepage: Podcast section displays Spotify embed player when Show ID is configured
+- RSS URL: Field is available for future podcast feed integration
+- Storage: Uses site_settings table for global podcast configuration
 
 ### Build Process
 
