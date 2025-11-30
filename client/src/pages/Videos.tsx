@@ -37,10 +37,32 @@ export default function Videos() {
     return matchesSearch && matchesCategory;
   });
 
-  // Generate YouTube thumbnail URL if not provided
+  // Generate YouTube thumbnail URL with multiple fallback options
   const getVideoThumbnail = (videoId: string, thumbnail?: string) => {
     if (thumbnail) return thumbnail;
+    // Return maxresdefault first, will fallback in img.onError
     return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  };
+
+  // Handle thumbnail load errors with graceful fallbacks
+  const handleThumbnailError = (e: React.SyntheticEvent<HTMLImageElement>, videoId: string) => {
+    const img = e.target as HTMLImageElement;
+    const currentSrc = img.src;
+    
+    // Try different quality levels of YouTube thumbnails
+    if (currentSrc.includes('maxresdefault')) {
+      img.src = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+    } else if (currentSrc.includes('sddefault')) {
+      img.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    } else if (currentSrc.includes('hqdefault')) {
+      img.src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+    } else if (currentSrc.includes('mqdefault')) {
+      img.src = `https://img.youtube.com/vi/${videoId}/default.jpg`;
+    } else {
+      // If all thumbnails fail, use a solid color placeholder
+      img.style.backgroundColor = '#1a1a1a';
+      img.style.opacity = '1';
+    }
   };
 
   return (
@@ -99,9 +121,8 @@ export default function Videos() {
                   alt={video.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   data-testid={`img-video-thumbnail-${video.id}`}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
-                  }}
+                  onError={(e) => handleThumbnailError(e, video.videoId)}
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
