@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { emailService } from "./email";
+import { youtubeService } from "./youtube";
 import {
   insertVideoSchema,
   insertRegistrationSchema,
@@ -231,6 +232,81 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error updating podcast settings:", error);
       res.status(500).json({ error: "Failed to update podcast settings" });
+    }
+  });
+
+  // YouTube Sync Routes
+  app.get("/api/youtube/status", async (req, res) => {
+    try {
+      res.json({ 
+        configured: youtubeService.isConfigured(),
+        message: youtubeService.isConfigured() 
+          ? "YouTube API is configured and ready" 
+          : "YouTube API key not configured. Add YOUTUBE_API_KEY to secrets."
+      });
+    } catch (error) {
+      console.error("Error checking YouTube status:", error);
+      res.status(500).json({ error: "Failed to check YouTube status" });
+    }
+  });
+
+  app.post("/api/youtube/sync", async (req, res) => {
+    try {
+      if (!youtubeService.isConfigured()) {
+        return res.status(400).json({ 
+          error: "YouTube API key not configured. Please add YOUTUBE_API_KEY to your secrets." 
+        });
+      }
+
+      const searchQueries = [
+        "Rev Tom Otieno",
+        "Rev. Tom Otieno sermon",
+        "Tom Otieno deliverance",
+        "Tom Otieno healing",
+        "The Well Bethel Tom Otieno"
+      ];
+
+      const result = await youtubeService.syncVideos(searchQueries);
+      
+      const existingVideos = await storage.getAllVideos();
+      const existingIds = new Set(existingVideos.map(v => v.videoId));
+      
+      let added = 0;
+      let skipped = 0;
+      
+      for (const video of result.videos) {
+        if (existingIds.has(video.videoId)) {
+          skipped++;
+          continue;
+        }
+        
+        try {
+          await storage.createVideo({
+            title: video.title,
+            videoId: video.videoId,
+            category: video.category,
+            thumbnail: video.thumbnail,
+            duration: video.duration,
+            views: video.views
+          });
+          added++;
+          existingIds.add(video.videoId);
+        } catch (err) {
+          console.error(`Error adding video ${video.videoId}:`, err);
+          skipped++;
+        }
+      }
+      
+      res.json({ 
+        success: true,
+        message: `Sync complete: ${added} videos added, ${skipped} skipped (duplicates or errors)`,
+        added,
+        skipped,
+        total: existingVideos.length + added
+      });
+    } catch (error: any) {
+      console.error("Error syncing YouTube videos:", error);
+      res.status(500).json({ error: error.message || "Failed to sync YouTube videos" });
     }
   });
 

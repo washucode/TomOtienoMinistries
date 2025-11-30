@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Video, Plus, Trash2, Edit, Loader2, Calendar, Settings, Headphones, Lock, LogOut } from "lucide-react";
+import { Users, Video, Plus, Trash2, Edit, Loader2, Calendar, Settings, Headphones, Lock, LogOut, RefreshCw, Youtube } from "lucide-react";
 
 type Video = {
   id: string;
@@ -195,6 +195,43 @@ export default function Admin() {
     },
     onError: () => {
       toast({ title: "Error", description: "Failed to update podcast settings.", variant: "destructive" });
+    },
+  });
+
+  const { data: youtubeStatus } = useQuery<{ configured: boolean; message: string }>({
+    queryKey: ["youtube-status"],
+    queryFn: async () => {
+      const res = await fetch("/api/youtube/status");
+      if (!res.ok) throw new Error("Failed to check YouTube status");
+      return res.json();
+    },
+  });
+
+  const syncYoutubeMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/youtube/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to sync YouTube videos");
+      }
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
+      toast({ 
+        title: "YouTube Sync Complete", 
+        description: `Added ${data.added} new videos. ${data.skipped} skipped.` 
+      });
+    },
+    onError: (error: Error) => {
+      toast({ 
+        title: "Sync Failed", 
+        description: error.message || "Failed to sync YouTube videos. Check API key.", 
+        variant: "destructive" 
+      });
     },
   });
 
@@ -654,6 +691,35 @@ export default function Admin() {
           </TabsList>
 
           <TabsContent value="videos" className="space-y-6">
+            <Card className="border-primary/20 bg-primary/5">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-3">
+                  <Youtube className="w-6 h-6 text-red-600" />
+                  <div className="flex-1">
+                    <CardTitle className="text-base">YouTube Auto-Sync</CardTitle>
+                    <CardDescription className="text-xs">
+                      {youtubeStatus?.configured 
+                        ? "Search and import Rev. Tom Otieno videos from YouTube automatically"
+                        : "Add YOUTUBE_API_KEY to secrets to enable automatic video import"
+                      }
+                    </CardDescription>
+                  </div>
+                  <Button
+                    onClick={() => syncYoutubeMutation.mutate()}
+                    disabled={!youtubeStatus?.configured || syncYoutubeMutation.isPending}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                    data-testid="button-youtube-sync"
+                  >
+                    {syncYoutubeMutation.isPending ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Syncing...</>
+                    ) : (
+                      <><RefreshCw className="w-4 h-4 mr-2" /> Sync from YouTube</>
+                    )}
+                  </Button>
+                </div>
+              </CardHeader>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle>Video Library</CardTitle>
