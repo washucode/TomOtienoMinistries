@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import VerseOfTheDay from "@/components/VerseOfTheDay";
 import Sermons from "@/components/Sermons";
 import Ministries from "@/components/Ministries";
 import Proskuneo from "@/components/Proskuneo";
@@ -13,6 +14,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <VerseOfTheDay />
         <Ministries />
         <Sermons />
         <Podcast />
