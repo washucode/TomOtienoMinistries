@@ -180,12 +180,22 @@ export default function Ministries() {
               Specific programs designed to equip, heal, and set you free. Check session dates and register below.
             </p>
           </div>
-          <Button variant="outline" className="rounded-none h-12 px-6 border-primary text-primary hover:bg-primary hover:text-white transition-all">
+          <Button 
+            variant="outline" 
+            className="rounded-none h-12 px-6 border-primary text-primary hover:bg-primary hover:text-white transition-all"
+            onClick={() => {
+              const grid = document.querySelector("#ministries-grid");
+              if (grid) {
+                grid.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }}
+            data-testid="button-view-all-programs"
+          >
             View All Programs
           </Button>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="ministries-grid" className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {ministries.map((item, index) => (
             <motion.div
               key={item.title}
