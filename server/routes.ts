@@ -204,6 +204,36 @@ export async function registerRoutes(
     }
   });
 
+  // Podcast Settings Routes
+  app.get("/api/site-settings/podcast", async (req, res) => {
+    try {
+      const settings = await storage.getPodcastSettings();
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching podcast settings:", error);
+      res.status(500).json({ error: "Failed to fetch podcast settings" });
+    }
+  });
+
+  app.put("/api/site-settings/podcast", async (req, res) => {
+    try {
+      const { spotifyShowId, rssUrl } = req.body;
+      
+      if (spotifyShowId !== undefined) {
+        await storage.upsertSiteSetting("spotify_show_id", spotifyShowId || null);
+      }
+      if (rssUrl !== undefined) {
+        await storage.upsertSiteSetting("podcast_rss_url", rssUrl || null);
+      }
+      
+      const settings = await storage.getPodcastSettings();
+      res.json(settings);
+    } catch (error) {
+      console.error("Error updating podcast settings:", error);
+      res.status(500).json({ error: "Failed to update podcast settings" });
+    }
+  });
+
   // Seed endpoint (for development only)
   app.post("/api/seed", async (req, res) => {
     try {
