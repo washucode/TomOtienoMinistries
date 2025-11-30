@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Sermons from "@/components/Sermons";
 import Ministries from "@/components/Ministries";
 import Proskuneo from "@/components/Proskuneo";
+import Podcast from "@/components/Podcast";
 import Book from "@/components/Book";
 import Footer from "@/components/Footer";
 
@@ -14,6 +15,7 @@ export default function Home() {
         <Hero />
         <Ministries />
         <Sermons />
+        <Podcast />
         <Proskuneo />
         <Book />
       </main>

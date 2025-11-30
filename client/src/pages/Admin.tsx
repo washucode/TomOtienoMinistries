@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Video, Plus, Trash2, Edit, Loader2, Calendar, Settings } from "lucide-react";
+import { Users, Video, Plus, Trash2, Edit, Loader2, Calendar, Settings, Headphones } from "lucide-react";
 
 type Video = {
   id: string;
@@ -79,6 +79,10 @@ export default function Admin() {
     meetingMode: "In-person",
     spotifyShowId: "",
   });
+  const [podcastForm, setPodcastForm] = useState({
+    spotifyShowId: "",
+    rssUrl: "",
+  });
   const [regForm, setRegForm] = useState({
     fullName: "",
     email: "",
@@ -110,6 +114,36 @@ export default function Admin() {
       const res = await fetch("/api/ministry-settings");
       if (!res.ok) throw new Error("Failed to fetch settings");
       return res.json();
+    },
+  });
+
+  const { data: podcastSettings, isLoading: podcastLoading, refetch: refetchPodcast } = useQuery<{ spotifyShowId: string | null; rssUrl: string | null }>({
+    queryKey: ["podcast-settings"],
+    queryFn: async () => {
+      const res = await fetch("/api/site-settings/podcast");
+      if (!res.ok) throw new Error("Failed to fetch podcast settings");
+      const data = await res.json();
+      setPodcastForm({ spotifyShowId: data.spotifyShowId || "", rssUrl: data.rssUrl || "" });
+      return data;
+    },
+  });
+
+  const updatePodcastMutation = useMutation({
+    mutationFn: async (settings: typeof podcastForm) => {
+      const res = await fetch("/api/site-settings/podcast", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+      if (!res.ok) throw new Error("Failed to update podcast settings");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["podcast-settings"] });
+      toast({ title: "Podcast Settings Updated", description: "Your podcast settings have been saved." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to update podcast settings.", variant: "destructive" });
     },
   });
 
@@ -495,10 +529,11 @@ export default function Admin() {
         </div>
 
         <Tabs defaultValue="videos" className="space-y-6">
-          <TabsList className="grid w-full md:w-[500px] grid-cols-3">
+          <TabsList className="grid w-full md:w-[600px] grid-cols-4">
             <TabsTrigger value="videos" data-testid="tab-videos">Videos</TabsTrigger>
             <TabsTrigger value="registrations" data-testid="tab-registrations">Registrations</TabsTrigger>
-            <TabsTrigger value="settings" data-testid="tab-settings">Ministry Settings</TabsTrigger>
+            <TabsTrigger value="settings" data-testid="tab-settings">Settings</TabsTrigger>
+            <TabsTrigger value="podcast" data-testid="tab-podcast">Podcast</TabsTrigger>
           </TabsList>
 
           <TabsContent value="videos" className="space-y-6">
@@ -708,6 +743,75 @@ export default function Admin() {
                     </Card>
                   ))}
                 </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="podcast">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Headphones className="w-5 h-5" />
+                  Podcast Settings
+                </CardTitle>
+                <CardDescription>Configure your podcast feed. The Spotify embed will appear on your homepage.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {podcastLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  </div>
+                ) : (
+                  <form onSubmit={(e) => { e.preventDefault(); updatePodcastMutation.mutate(podcastForm); }} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="spotify-show-id">Spotify Show ID</Label>
+                      <Input
+                        id="spotify-show-id"
+                        placeholder="e.g. 5qXqJngdCfVGHlQKB6Fl0x"
+                        value={podcastForm.spotifyShowId}
+                        onChange={(e) => setPodcastForm({ ...podcastForm, spotifyShowId: e.target.value })}
+                        data-testid="input-spotify-show-id"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Find your Show ID in your Spotify for Podcasters dashboard or from your podcast URL (open.spotify.com/show/YOUR_SHOW_ID)
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="podcast-rss">Podcast RSS Feed URL</Label>
+                      <Input
+                        id="podcast-rss"
+                        placeholder="https://anchor.fm/s/xxx/podcast/rss"
+                        value={podcastForm.rssUrl}
+                        onChange={(e) => setPodcastForm({ ...podcastForm, rssUrl: e.target.value })}
+                        data-testid="input-podcast-rss"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Optional: Add your podcast RSS feed URL for future episode list integration
+                      </p>
+                    </div>
+                    
+                    {podcastForm.spotifyShowId && (
+                      <div className="space-y-2">
+                        <Label>Preview</Label>
+                        <div className="rounded-lg overflow-hidden border">
+                          <iframe
+                            src={`https://open.spotify.com/embed/show/${podcastForm.spotifyShowId}?utm_source=generator&theme=0`}
+                            width="100%"
+                            height="352"
+                            frameBorder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="lazy"
+                            title="Spotify Podcast Preview"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    <Button type="submit" className="w-full bg-primary text-white" disabled={updatePodcastMutation.isPending} data-testid="button-save-podcast">
+                      {updatePodcastMutation.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : "Save Podcast Settings"}
+                    </Button>
+                  </form>
                 )}
               </CardContent>
             </Card>
