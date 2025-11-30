@@ -16,20 +16,20 @@ export default function Footer() {
               A dedicated Deliverance Minister and Teacher of the Word, equipping the body of Christ. As a Worship & Music Minister, he leads believers into deep encounters with God. He also serves as a Mediator, Counselor, and Mentor, guiding individuals through life's challenges with biblical wisdom.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-background/70 hover:text-primary transition-colors"><Facebook className="w-6 h-6" /></a>
-              <a href="#" className="text-background/70 hover:text-primary transition-colors"><Instagram className="w-6 h-6" /></a>
-              <a href="#" className="text-background/70 hover:text-primary transition-colors"><Youtube className="w-6 h-6" /></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-background/70 hover:text-primary transition-colors" data-testid="link-facebook"><Facebook className="w-6 h-6" /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-background/70 hover:text-primary transition-colors" data-testid="link-instagram"><Instagram className="w-6 h-6" /></a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-background/70 hover:text-primary transition-colors" data-testid="link-youtube"><Youtube className="w-6 h-6" /></a>
             </div>
           </div>
           
           <div>
             <h4 className="font-bold text-lg mb-6 font-serif text-primary">Quick Links</h4>
             <ul className="space-y-3 text-background/70">
-              <li><a href="#" className="hover:text-primary transition-colors">About Rev. Tom</a></li>
+              <li><a href="/" className="hover:text-primary transition-colors">About Rev. Tom</a></li>
               <li><a href="#ministries" className="hover:text-primary transition-colors">Ministries</a></li>
               <li><a href="#proskuneo" className="hover:text-primary transition-colors">Proskuneo</a></li>
               <li><a href="#book" className="hover:text-primary transition-colors">Books & Resources</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Give / Tithe</a></li>
+              <li><a href="mailto:revtotieno@gmail.com?subject=Giving/Tithe Inquiry" className="hover:text-primary transition-colors" data-testid="link-give-tithe">Give / Tithe</a></li>
             </ul>
           </div>
           

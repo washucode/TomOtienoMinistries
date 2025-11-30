@@ -1,10 +1,23 @@
 import { motion } from "framer-motion";
+import { Link, useLocation } from "wouter";
 import heroBg from "@assets/generated_images/ethereal_church_sanctuary_light.png";
 import portrait from "@assets/Rev Tom 5_1764501067497.jpg";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
 
 export default function Hero() {
+  const [, navigate] = useLocation();
+
+  const scrollToMinistries = () => {
+    const element = document.querySelector("#ministries");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const goToSermons = () => {
+    navigate("/videos");
+  };
   return (
     <div className="relative min-h-[95vh] flex items-center overflow-hidden bg-background">
       {/* Modern Gradient Background */}
@@ -43,10 +56,21 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-5">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-none px-8 h-14 text-base tracking-wide">
+              <Button 
+                size="lg" 
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-none px-8 h-14 text-base tracking-wide"
+                onClick={scrollToMinistries}
+                data-testid="button-start-journey"
+              >
                 Start Your Journey
               </Button>
-              <Button size="lg" variant="ghost" className="rounded-none px-8 h-14 text-base group hover:bg-primary/5">
+              <Button 
+                size="lg" 
+                variant="ghost" 
+                className="rounded-none px-8 h-14 text-base group hover:bg-primary/5"
+                onClick={goToSermons}
+                data-testid="button-latest-sermon"
+              >
                 <PlayCircle className="mr-3 w-5 h-5 text-primary" />
                 Latest Sermon
               </Button>

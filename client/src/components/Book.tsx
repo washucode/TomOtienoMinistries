@@ -1,8 +1,28 @@
 import bookCover from "@assets/generated_images/book_cover_understanding_the_deliverance_ministry.png";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Book() {
+  const { toast } = useToast();
+  const [orderOpen, setOrderOpen] = useState(false);
+  const [orderForm, setOrderForm] = useState({ name: "", email: "", phone: "", address: "" });
+
+  const handleOrderSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const mailtoLink = `mailto:revtotieno@gmail.com?subject=Book Order: Understanding The Deliverance Ministry&body=Name: ${orderForm.name}%0AEmail: ${orderForm.email}%0APhone: ${orderForm.phone}%0ADelivery Address: ${orderForm.address}%0A%0AI would like to order a copy of "Understanding The Deliverance Ministry" (KES 1,500)`;
+    window.open(mailtoLink, '_blank');
+    setOrderOpen(false);
+    setOrderForm({ name: "", email: "", phone: "", address: "" });
+    toast({
+      title: "Order Request Sent",
+      description: "Your email client will open to complete the order. We'll contact you shortly.",
+    });
+  };
   return (
     <section id="book" className="py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -36,7 +56,12 @@ export default function Book() {
             </ul>
 
             <div className="flex items-center gap-4">
-              <Button size="lg" className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-8">
+              <Button 
+                size="lg" 
+                className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-8"
+                onClick={() => setOrderOpen(true)}
+                data-testid="button-order-book"
+              >
                 Order Your Copy
               </Button>
               <span className="text-lg font-bold text-primary">KES 1,500</span>
@@ -44,6 +69,67 @@ export default function Book() {
           </div>
         </div>
       </div>
+
+      <Dialog open={orderOpen} onOpenChange={setOrderOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-2xl">Order Your Copy</DialogTitle>
+            <DialogDescription>
+              Fill in your details and we'll contact you to arrange delivery. Price: KES 1,500
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleOrderSubmit} className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="order-name">Full Name</Label>
+              <Input 
+                id="order-name" 
+                placeholder="Your full name" 
+                value={orderForm.name}
+                onChange={(e) => setOrderForm({...orderForm, name: e.target.value})}
+                required 
+                data-testid="input-order-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="order-email">Email</Label>
+              <Input 
+                id="order-email" 
+                type="email" 
+                placeholder="your@email.com" 
+                value={orderForm.email}
+                onChange={(e) => setOrderForm({...orderForm, email: e.target.value})}
+                required 
+                data-testid="input-order-email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="order-phone">Phone Number</Label>
+              <Input 
+                id="order-phone" 
+                placeholder="+254..." 
+                value={orderForm.phone}
+                onChange={(e) => setOrderForm({...orderForm, phone: e.target.value})}
+                required 
+                data-testid="input-order-phone"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="order-address">Delivery Address</Label>
+              <Input 
+                id="order-address" 
+                placeholder="Your delivery address" 
+                value={orderForm.address}
+                onChange={(e) => setOrderForm({...orderForm, address: e.target.value})}
+                required 
+                data-testid="input-order-address"
+              />
+            </div>
+            <Button type="submit" className="w-full bg-primary text-white" data-testid="button-submit-order">
+              Send Order Request
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

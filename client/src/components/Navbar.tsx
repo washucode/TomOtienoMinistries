@@ -53,7 +53,11 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-serif rounded-none px-6">
+          <Button 
+            className="bg-primary text-primary-foreground hover:bg-primary/90 font-serif rounded-none px-6"
+            onClick={() => scrollToSection("#ministries")}
+            data-testid="button-join-ministry-desktop"
+          >
             Join Ministry
           </Button>
         </div>
@@ -82,7 +86,11 @@ export default function Navbar() {
                   {link.name}
                 </a>
               ))}
-              <Button className="w-full bg-primary text-primary-foreground font-serif rounded-none">
+              <Button 
+                className="w-full bg-primary text-primary-foreground font-serif rounded-none"
+                onClick={() => scrollToSection("#ministries")}
+                data-testid="button-join-ministry-mobile"
+              >
                 Join Ministry
               </Button>
             </div>
