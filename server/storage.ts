@@ -106,8 +106,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteRegistration(id: string): Promise<boolean> {
+    const registration = await db.select().from(registrations).where(eq(registrations.id, id));
+    if (registration.length === 0) return false;
+    
+    const ministryType = registration[0].ministryType;
     const result = await db.delete(registrations).where(eq(registrations.id, id)).returning();
+    
+    if (result.length > 0) {
+      await this.decrementRegistrationCount(ministryType);
+    }
     return result.length > 0;
+  }
+
+  async decrementRegistrationCount(ministryType: string): Promise<void> {
+    const settings = await this.getMinistrySettings(ministryType);
+    if (settings && (settings.currentRegistrations || 0) > 0) {
+      await db
+        .update(ministrySettings)
+        .set({ currentRegistrations: (settings.currentRegistrations || 0) - 1 })
+        .where(eq(ministrySettings.ministryType, ministryType));
+    }
   }
 
   // Ministry Settings methods
