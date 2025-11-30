@@ -1,8 +1,9 @@
 import { Link } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import logo from "@assets/logo_1764501374554.png";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,11 +25,15 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md h-20 flex items-center">
+      <div className="container mx-auto flex items-center justify-between px-4">
         <Link href="/">
-          <a className="font-serif text-2xl font-bold text-primary">
-            Rev. Tom Otieno
+          <a className="flex items-center gap-2">
+            <img 
+              src={logo} 
+              alt="Rev. Tom Otieno Signature" 
+              className="h-12 md:h-16 w-auto object-contain mix-blend-multiply" 
+            />
           </a>
         </Link>
 

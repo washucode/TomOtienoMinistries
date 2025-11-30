@@ -24,17 +24,19 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
         >
           <span className="inline-block px-3 py-1 mb-4 text-sm font-medium tracking-wider text-primary uppercase border border-primary/20 rounded-full bg-primary/5">
-            Healing & Deliverance Ministry
+            Rev. Tom Otieno
           </span>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
             Walking in <br />
             <span className="text-primary italic">Divine Freedom</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg leading-relaxed">
-            Welcome to the ministry of Rev. Tom Otieno. A journey of healing,
-            understanding dreams, and spiritual deliverance through the power of
-            the Gospel.
-          </p>
+          
+          <div className="space-y-2 mb-8 text-muted-foreground font-medium text-lg md:text-xl">
+            <p>Deliverance Minister | Teacher of the Word</p>
+            <p>Worship & Music Minister | Mediator</p>
+            <p>Counselor | Mentor</p>
+          </div>
+
           <div className="flex flex-wrap gap-4">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-12 text-base">
               Start Your Journey
@@ -63,7 +65,7 @@ export default function Hero() {
             </div>
           </div>
           
-          {/* Decorative Elements - Updated colors */}
+          {/* Decorative Elements */}
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-pink-200/30 rounded-full blur-3xl -z-10" />
           <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -z-10" />
         </motion.div>
