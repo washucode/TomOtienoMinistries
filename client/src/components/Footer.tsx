@@ -52,8 +52,9 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-white/10 pt-8 text-center text-sm text-background/50">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-background/50">
           <p>&copy; {new Date().getFullYear()} Rev. Tom Otieno Ministries. All rights reserved.</p>
+          <a href="/admin" className="hover:text-primary transition-colors text-xs">Admin Login</a>
         </div>
       </div>
     </footer>
