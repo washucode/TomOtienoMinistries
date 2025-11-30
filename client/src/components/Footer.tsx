@@ -10,7 +10,7 @@ export default function Footer() {
             <img 
               src={logo} 
               alt="Rev. Tom Otieno" 
-              className="h-16 w-auto mb-6 invert" 
+              className="h-16 w-auto mb-6 grayscale invert mix-blend-screen contrast-125" 
             />
             <p className="text-background/80 mb-6 max-w-sm leading-relaxed text-sm">
               A dedicated Deliverance Minister and Teacher of the Word, equipping the body of Christ. As a Worship & Music Minister, he leads believers into deep encounters with God. He also serves as a Mediator, Counselor, and Mentor, guiding individuals through life's challenges with biblical wisdom.

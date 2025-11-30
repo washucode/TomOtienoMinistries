@@ -32,7 +32,7 @@ export default function Navbar() {
             <img 
               src={logo} 
               alt="Rev. Tom Otieno Signature" 
-              className="h-12 md:h-16 w-auto object-contain mix-blend-multiply" 
+              className="h-12 md:h-16 w-auto object-contain mix-blend-multiply grayscale contrast-125" 
             />
           </a>
         </Link>
