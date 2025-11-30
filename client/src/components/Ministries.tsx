@@ -1,34 +1,54 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Moon, Shield, GraduationCap, ArrowUpRight } from "lucide-react";
+import { Heart, Moon, Shield, GraduationCap, ArrowUpRight, CalendarDays, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
-const ministries = [
+type RegistrationStatus = 'open' | 'closed' | 'upcoming';
+
+interface Ministry {
+  title: string;
+  description: string;
+  icon: any;
+  tags: string[];
+  image: string;
+  featured?: boolean;
+  status: RegistrationStatus;
+  nextSession?: string;
+  registrationLink?: string;
+}
+
+const ministries: Ministry[] = [
   {
     title: "Deal to Heal",
     description: "Emotional and spiritual restoration. Confronting past wounds to find present peace.",
     icon: Heart,
     tags: ["Healing", "Restoration"],
-    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=2070&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=2070&auto=format&fit=crop",
+    status: 'open',
+    nextSession: "Registration Ongoing",
   },
   {
     title: "Understanding Dreams",
     description: "Biblical interpretation of dreams. Discern God's voice in the night seasons.",
     icon: Moon,
     tags: ["Prophetic", "Wisdom"],
-    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2094&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2094&auto=format&fit=crop",
+    status: 'upcoming',
+    nextSession: "Opens Jan 15th, 2025",
   },
   {
     title: "Deliverance Ministry",
     description: "Breaking free from spiritual strongholds and walking in total liberty.",
     icon: Shield,
     tags: ["Freedom", "Warfare"],
-    image: "https://images.unsplash.com/photo-1507692049790-de58293a4654?q=80&w=2070&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1507692049790-de58293a4654?q=80&w=2070&auto=format&fit=crop",
+    status: 'open',
+    nextSession: "Sessions Weekly",
   },
   {
     title: "Master Class",
@@ -37,15 +57,31 @@ const ministries = [
     tags: ["Training", "Mentorship"],
     image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b955?q=80&w=2070&auto=format&fit=crop",
     featured: true,
+    status: 'open',
+    nextSession: "Jan 2025 Intake",
   },
 ];
 
 export default function Ministries() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [selectedMinistry, setSelectedMinistry] = useState("");
+  const [selectedMinistry, setSelectedMinistry] = useState<Ministry | null>(null);
 
-  const handleRegister = (ministry: string) => {
+  const handleRegister = (ministry: Ministry) => {
+    if (ministry.registrationLink) {
+      window.open(ministry.registrationLink, '_blank');
+      return;
+    }
+    
+    if (ministry.status === 'closed') {
+      toast({
+        title: "Registration Closed",
+        description: "Registration for this program is currently closed.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSelectedMinistry(ministry);
     setOpen(true);
   };
@@ -55,8 +91,31 @@ export default function Ministries() {
     setOpen(false);
     toast({
       title: "Registration Received",
-      description: `Thank you for registering for ${selectedMinistry}. We will contact you shortly.`,
+      description: `Thank you for registering for ${selectedMinistry?.title}. We will contact you shortly.`,
     });
+  };
+
+  const getStatusBadge = (status: RegistrationStatus, nextSession?: string) => {
+    switch (status) {
+      case 'open':
+        return (
+          <Badge className="bg-green-600 hover:bg-green-700 text-white border-none rounded-none px-3 py-1">
+            Registration Open
+          </Badge>
+        );
+      case 'upcoming':
+        return (
+          <Badge variant="outline" className="border-primary text-primary bg-primary/5 rounded-none px-3 py-1">
+            {nextSession || 'Coming Soon'}
+          </Badge>
+        );
+      case 'closed':
+        return (
+          <Badge variant="secondary" className="bg-secondary text-muted-foreground rounded-none px-3 py-1">
+            Closed
+          </Badge>
+        );
+    }
   };
 
   return (
@@ -68,7 +127,7 @@ export default function Ministries() {
               Our Ministries
             </h2>
             <p className="text-muted-foreground text-lg font-light max-w-xl">
-              Specific programs designed to equip, heal, and set you free. Join a community seeking deeper truth.
+              Specific programs designed to equip, heal, and set you free. Check session dates and register below.
             </p>
           </div>
           <Button variant="outline" className="rounded-none h-12 px-6 border-primary text-primary hover:bg-primary hover:text-white transition-all">
@@ -76,7 +135,7 @@ export default function Ministries() {
           </Button>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {ministries.map((item, index) => (
             <motion.div
               key={item.title}
@@ -84,49 +143,55 @@ export default function Ministries() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={`group relative overflow-hidden bg-white h-[400px] border border-border/50 ${item.featured ? 'lg:col-span-2' : ''}`}
+              className={`group relative overflow-hidden bg-white min-h-[480px] border border-border/50 flex flex-col ${item.featured ? 'lg:col-span-2' : ''}`}
             >
-              {/* Background Image on Hover */}
-              <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-0 group-hover:opacity-100" 
-                   style={{ backgroundImage: `url(${item.image})` }} />
-              <div className="absolute inset-0 bg-primary/90 group-hover:bg-primary/80 transition-colors duration-500 opacity-0 group-hover:opacity-100 mix-blend-multiply" />
+              {/* Image Header */}
+              <div className="relative h-48 overflow-hidden">
+                 <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
+                     style={{ backgroundImage: `url(${item.image})` }} />
+                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                 
+                 <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                    <div className="p-2 bg-white/90 backdrop-blur-md">
+                      <item.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    {item.featured && (
+                      <span className="px-3 py-1 bg-primary text-white text-xs uppercase tracking-widest font-medium">
+                        Featured
+                      </span>
+                    )}
+                 </div>
+              </div>
               
               {/* Content */}
-              <div className="relative z-10 h-full p-8 flex flex-col justify-between transition-colors duration-300 group-hover:text-white">
-                <div className="flex justify-between items-start">
-                  <div className="p-3 bg-secondary/50 group-hover:bg-white/20 rounded-none backdrop-blur-sm transition-colors">
-                    <item.icon className="w-6 h-6 text-primary group-hover:text-white" />
+              <div className="p-6 flex flex-col grow">
+                <div className="mb-6">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {getStatusBadge(item.status, item.nextSession)}
                   </div>
-                  {item.featured && (
-                    <span className="px-3 py-1 bg-primary text-white text-xs uppercase tracking-widest font-medium">
-                      Featured
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <h3 className="font-serif text-2xl mb-3 group-hover:translate-x-2 transition-transform duration-300">
+                  
+                  <h3 className="font-serif text-2xl mb-3 group-hover:text-primary transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="text-muted-foreground group-hover:text-white/90 text-sm leading-relaxed mb-6">
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     {item.description}
                   </p>
-                  
-                  <div className="flex items-center justify-between border-t border-border/50 group-hover:border-white/30 pt-6">
-                    <div className="flex gap-2">
-                      {item.tags.map(tag => (
-                        <span key={tag} className="text-xs text-muted-foreground group-hover:text-white/70 uppercase tracking-wider">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <button 
-                      onClick={() => handleRegister(item.title)}
-                      className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                    >
-                      <ArrowUpRight className="w-5 h-5" />
-                    </button>
+                </div>
+
+                <div className="mt-auto pt-6 border-t border-border/50">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                    <CalendarDays className="w-4 h-4 text-primary" />
+                    <span className="font-medium text-foreground">{item.nextSession}</span>
                   </div>
+                  
+                  <Button 
+                    onClick={() => handleRegister(item)}
+                    className="w-full rounded-none h-12 bg-primary text-primary-foreground hover:bg-primary/90"
+                    disabled={item.status === 'closed'}
+                  >
+                    {item.status === 'open' ? 'Register Now' : item.status === 'upcoming' ? 'Join Waitlist' : 'Registration Closed'}
+                    <ArrowUpRight className="ml-2 w-4 h-4" />
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -137,10 +202,11 @@ export default function Ministries() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[425px] rounded-none">
           <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">Register for {selectedMinistry}</DialogTitle>
-            <DialogDescription>
-              Secure your spot in this transformative program.
-            </DialogDescription>
+            <DialogTitle className="font-serif text-2xl">Register for {selectedMinistry?.title}</DialogTitle>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
+               <AlertCircle className="w-4 h-4 text-primary" />
+               <span>Session: {selectedMinistry?.nextSession}</span>
+            </div>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="grid gap-6 py-4">
             <div className="grid gap-2">
