@@ -28,14 +28,12 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md h-24 flex items-center">
       <div className="container mx-auto flex items-center justify-between px-4">
-        <Link href="/">
-          <a className="flex items-center gap-2">
-            <img 
-              src={logo} 
-              alt="Rev. Tom Otieno Signature" 
-              className="h-16 md:h-20 w-auto object-contain mix-blend-multiply grayscale contrast-125 brightness-110" 
-            />
-          </a>
+        <Link href="/" className="flex items-center gap-2">
+          <img 
+            src={logo} 
+            alt="Rev. Tom Otieno Signature" 
+            className="h-16 md:h-20 w-auto object-contain mix-blend-multiply grayscale contrast-125 brightness-110" 
+          />
         </Link>
 
         {/* Desktop Menu */}
