@@ -1,14 +1,9 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { Pool } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import { videos, ministrySettings } from "@shared/schema";
-import ws from "ws";
 
-const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  // @ts-ignore - WebSocket is required for Neon serverless
-  webSocketConstructor: ws,
-});
-const db = drizzle(pool);
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle(sql);
 
 async function seed() {
   console.log("🌱 Seeding database...");

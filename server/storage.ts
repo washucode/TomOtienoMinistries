@@ -1,7 +1,6 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { Pool } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import { eq, desc } from "drizzle-orm";
-import ws from "ws";
 import {
   users,
   videos,
@@ -17,12 +16,8 @@ import {
   type InsertMinistrySettings,
 } from "@shared/schema";
 
-const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  // @ts-ignore - WebSocket is required for Neon serverless
-  webSocketConstructor: ws,
-});
-const db = drizzle(pool);
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle(sql);
 
 export interface IStorage {
   // User methods
