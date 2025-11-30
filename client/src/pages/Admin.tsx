@@ -73,6 +73,11 @@ export default function Admin() {
     location: "",
     capacity: 50,
     currentRegistrations: 0,
+    startDate: "",
+    endDate: "",
+    meetingDays: "",
+    meetingMode: "In-person",
+    spotifyShowId: "",
   });
   const [regForm, setRegForm] = useState({
     fullName: "",
@@ -279,6 +284,11 @@ export default function Admin() {
       location: settings.location || "",
       capacity: settings.capacity || 50,
       currentRegistrations: settings.currentRegistrations || 0,
+      startDate: (settings as any).startDate || "",
+      endDate: (settings as any).endDate || "",
+      meetingDays: (settings as any).meetingDays || "",
+      meetingMode: (settings as any).meetingMode || "In-person",
+      spotifyShowId: (settings as any).spotifyShowId || "",
     });
     setEditSettingsOpen(true);
   };
@@ -831,6 +841,61 @@ export default function Admin() {
                   value={settingsForm.capacity}
                   onChange={(e) => setSettingsForm({ ...settingsForm, capacity: parseInt(e.target.value) || 0 })}
                   data-testid="input-settings-capacity"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="settings-start-date">Start Date</Label>
+                  <Input
+                    id="settings-start-date"
+                    placeholder="e.g. January 15"
+                    value={settingsForm.startDate}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, startDate: e.target.value })}
+                    data-testid="input-settings-start-date"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="settings-end-date">End Date</Label>
+                  <Input
+                    id="settings-end-date"
+                    placeholder="e.g. January 20"
+                    value={settingsForm.endDate}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, endDate: e.target.value })}
+                    data-testid="input-settings-end-date"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="settings-meeting-days">Meeting Days</Label>
+                <Input
+                  id="settings-meeting-days"
+                  placeholder="e.g. Monday, Wednesday, Friday"
+                  value={settingsForm.meetingDays}
+                  onChange={(e) => setSettingsForm({ ...settingsForm, meetingDays: e.target.value })}
+                  data-testid="input-settings-meeting-days"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="settings-meeting-mode">Meeting Mode</Label>
+                <Select value={settingsForm.meetingMode} onValueChange={(val) => setSettingsForm({ ...settingsForm, meetingMode: val })}>
+                  <SelectTrigger data-testid="select-settings-meeting-mode">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="In-person">In-person</SelectItem>
+                    <SelectItem value="Online">Online</SelectItem>
+                    <SelectItem value="Hybrid">Hybrid</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="settings-spotify">Spotify Show ID</Label>
+                <Input
+                  id="settings-spotify"
+                  placeholder="e.g. 5qXqJngdCfVGHlQKB6Fl0x"
+                  value={settingsForm.spotifyShowId}
+                  onChange={(e) => setSettingsForm({ ...settingsForm, spotifyShowId: e.target.value })}
+                  data-testid="input-settings-spotify"
                 />
               </div>
               <Button type="submit" className="w-full bg-primary text-white" disabled={updateSettingsMutation.isPending} data-testid="button-update-settings">

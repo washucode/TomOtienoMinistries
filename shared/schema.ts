@@ -39,6 +39,11 @@ export const ministrySettings = pgTable("ministry_settings", {
   location: text("location"),
   capacity: integer("capacity"),
   currentRegistrations: integer("current_registrations").default(0),
+  startDate: text("start_date"),
+  endDate: text("end_date"),
+  meetingDays: text("meeting_days"),
+  meetingMode: text("meeting_mode"), // In-person, Online, Hybrid
+  spotifyShowId: text("spotify_show_id"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
