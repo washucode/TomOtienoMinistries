@@ -31,10 +31,11 @@ export default function Hero() {
             <span className="text-primary italic">Divine Freedom</span>
           </h1>
           
-          <div className="space-y-2 mb-8 text-muted-foreground font-medium text-lg md:text-xl">
-            <p>Deliverance Minister | Teacher of the Word</p>
-            <p>Worship & Music Minister | Mediator</p>
-            <p>Counselor | Mentor</p>
+          <div className="space-y-4 mb-8 text-muted-foreground text-lg max-w-lg">
+            <p>
+              A dedicated <span className="font-semibold text-foreground">Deliverance Minister</span> and <span className="font-semibold text-foreground">Teacher of the Word</span>. 
+              Serving the body of Christ as a <span className="font-semibold text-foreground">Worship & Music Minister</span>, while offering guidance as a trusted <span className="font-semibold text-foreground">Mediator, Counselor, and Mentor</span>.
+            </p>
           </div>
 
           <div className="flex flex-wrap gap-4">

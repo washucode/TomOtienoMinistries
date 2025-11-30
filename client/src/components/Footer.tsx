@@ -10,10 +10,10 @@ export default function Footer() {
             <img 
               src={logo} 
               alt="Rev. Tom Otieno" 
-              className="h-12 w-auto mb-6 invert brightness-0 opacity-90" 
+              className="h-16 w-auto mb-6 invert" 
             />
-            <p className="text-background/70 mb-6 max-w-sm leading-relaxed">
-              Deliverance Minister | Teacher of the Word | Worship and Music Minister | Mediator | Counselor | Mentor
+            <p className="text-background/80 mb-6 max-w-sm leading-relaxed text-sm">
+              A dedicated Deliverance Minister and Teacher of the Word, equipping the body of Christ. As a Worship & Music Minister, he leads believers into deep encounters with God. He also serves as a Mediator, Counselor, and Mentor, guiding individuals through life's challenges with biblical wisdom.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-background/70 hover:text-primary transition-colors"><Facebook className="w-6 h-6" /></a>

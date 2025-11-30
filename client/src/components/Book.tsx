@@ -1,4 +1,4 @@
-import bookCover from "@assets/generated_images/elegant_book_cover_mockup.png";
+import bookCover from "@assets/generated_images/book_cover_understanding_the_deliverance_ministry.png";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 
@@ -9,16 +9,16 @@ export default function Book() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div className="order-2 md:order-1 relative">
             <div className="relative z-10 rounded-lg overflow-hidden shadow-2xl">
-              <img src={bookCover} alt="Book Cover" className="w-full h-auto" />
+              <img src={bookCover} alt="Understanding The Deliverance Ministry Book Cover" className="w-full h-auto" />
             </div>
             {/* Decorative background shape */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/5 rounded-full blur-3xl -z-10" />
           </div>
           
           <div className="order-1 md:order-2">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">Unlock Your Spiritual Freedom</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">Understanding The Deliverance Ministry</h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Rev. Tom Otieno's latest book offers a comprehensive guide to understanding spiritual warfare, healing, and deliverance. A must-read for anyone seeking a deeper walk with God.
+              Rev. Tom Otieno's essential guide to understanding spiritual warfare, healing, and deliverance. A comprehensive resource for anyone seeking a deeper walk with God and freedom from spiritual bondage.
             </p>
             
             <ul className="space-y-4 mb-10">
