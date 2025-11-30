@@ -51,20 +51,14 @@ function parseDuration(isoDuration: string): string {
 function categorizeVideo(title: string): string {
   const lowerTitle = title.toLowerCase();
   
-  if (lowerTitle.includes("deliverance") || lowerTitle.includes("unmask") || lowerTitle.includes("soul ties") || lowerTitle.includes("curse") || lowerTitle.includes("spiritual warfare") || lowerTitle.includes("python") || lowerTitle.includes("evil covenant")) {
-    return "Deliverance";
-  }
-  if (lowerTitle.includes("healing") || lowerTitle.includes("trauma") || lowerTitle.includes("rejection") || lowerTitle.includes("emotional") || lowerTitle.includes("reconciliation")) {
-    return "Healing";
+  if (lowerTitle.includes("deliverance") || lowerTitle.includes("unmask") || lowerTitle.includes("soul ties") || lowerTitle.includes("curse") || lowerTitle.includes("spiritual warfare") || lowerTitle.includes("python") || lowerTitle.includes("evil covenant") || lowerTitle.includes("healing") || lowerTitle.includes("trauma") || lowerTitle.includes("rejection") || lowerTitle.includes("emotional") || lowerTitle.includes("reconciliation")) {
+    return "Healing & Deliverance";
   }
   if (lowerTitle.includes("parenting") || lowerTitle.includes("children") || lowerTitle.includes("child")) {
     return "Parenting";
   }
   if (lowerTitle.includes("family") || lowerTitle.includes("marriage") || lowerTitle.includes("husband") || lowerTitle.includes("wife") || lowerTitle.includes("firewalling")) {
     return "Family";
-  }
-  if (lowerTitle.includes("sermon") || lowerTitle.includes("sunday") || lowerTitle.includes("service") || lowerTitle.includes("morning session")) {
-    return "Sermon";
   }
   if (lowerTitle.includes("worship") || lowerTitle.includes("proskuneo") || lowerTitle.includes("praise")) {
     return "Worship";
@@ -73,7 +67,7 @@ function categorizeVideo(title: string): string {
     return "Church";
   }
   
-  return "Teaching";
+  return "Sermons & Teachings";
 }
 
 export class YouTubeService {

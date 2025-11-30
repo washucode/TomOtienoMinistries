@@ -63,7 +63,7 @@ export default function Admin() {
   const [videoForm, setVideoForm] = useState({
     title: "",
     videoId: "",
-    category: "Sermon",
+    category: "Sermons & Teachings",
     thumbnail: "",
     duration: "",
     views: "0 views"
@@ -574,10 +574,8 @@ export default function Admin() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Sermon">Sermon</SelectItem>
-                        <SelectItem value="Teaching">Teaching</SelectItem>
-                        <SelectItem value="Deliverance">Deliverance</SelectItem>
-                        <SelectItem value="Healing">Healing</SelectItem>
+                        <SelectItem value="Sermons & Teachings">Sermons & Teachings</SelectItem>
+                        <SelectItem value="Healing & Deliverance">Healing & Deliverance</SelectItem>
                         <SelectItem value="Family">Family</SelectItem>
                         <SelectItem value="Parenting">Parenting</SelectItem>
                         <SelectItem value="Worship">Worship</SelectItem>
@@ -1040,10 +1038,8 @@ export default function Admin() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Sermon">Sermon</SelectItem>
-                      <SelectItem value="Teaching">Teaching</SelectItem>
-                      <SelectItem value="Deliverance">Deliverance</SelectItem>
-                      <SelectItem value="Healing">Healing</SelectItem>
+                      <SelectItem value="Sermons & Teachings">Sermons & Teachings</SelectItem>
+                      <SelectItem value="Healing & Deliverance">Healing & Deliverance</SelectItem>
                       <SelectItem value="Family">Family</SelectItem>
                       <SelectItem value="Parenting">Parenting</SelectItem>
                       <SelectItem value="Worship">Worship</SelectItem>
