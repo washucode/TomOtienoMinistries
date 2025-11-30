@@ -2,74 +2,85 @@ import { motion } from "framer-motion";
 import heroBg from "@assets/generated_images/ethereal_church_sanctuary_light.png";
 import portrait from "@assets/Rev Tom 5_1764501067497.jpg";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, PlayCircle } from "lucide-react";
 
 export default function Hero() {
   return (
-    <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={heroBg}
-          alt="Sanctuary Background"
-          className="w-full h-full object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/60 to-background" />
+    <div className="relative min-h-[95vh] flex items-center overflow-hidden bg-background">
+      {/* Modern Gradient Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/30 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/3" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light" />
       </div>
 
-      <div className="container relative z-10 px-4 mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="inline-block px-3 py-1 mb-4 text-sm font-medium tracking-wider text-primary uppercase border border-primary/20 rounded-full bg-primary/5">
-            Rev. Tom Otieno
-          </span>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Walking in <br />
-            <span className="text-primary italic">Divine Freedom</span>
-          </h1>
-          
-          <div className="space-y-4 mb-8 text-muted-foreground text-lg max-w-lg">
-            <p>
-              A dedicated <span className="font-semibold text-foreground">Deliverance Minister</span> and <span className="font-semibold text-foreground">Teacher of the Word</span>. 
-              Serving the body of Christ as a <span className="font-semibold text-foreground">Worship & Music Minister</span>, while offering guidance as a trusted <span className="font-semibold text-foreground">Mediator, Counselor, and Mentor</span>.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-12 text-base">
-              Start Your Journey
-            </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 h-12 text-base group border-primary/20 text-primary hover:bg-primary/5">
-              Watch Sermons <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative"
-        >
-          <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl border-4 border-white aspect-[3/4] max-w-sm mx-auto">
-            <img
-              src={portrait}
-              alt="Rev. Tom Otieno"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-primary/90 to-transparent text-white">
-              <p className="font-serif text-xl font-bold">Rev. Tom Otieno</p>
-              <p className="text-sm opacity-90">Anglican Church of Kenya</p>
+      <div className="container relative z-10 px-4 mx-auto">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          {/* Text Content - Spans 7 columns */}
+          <motion.div 
+            className="lg:col-span-7 pt-20 lg:pt-0"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-[1px] w-12 bg-primary" />
+              <span className="text-sm font-medium tracking-[0.2em] text-primary uppercase">
+                Rev. Tom Otieno
+              </span>
             </div>
-          </div>
-          
-          {/* Decorative Elements */}
-          <div className="absolute -top-10 -right-10 w-64 h-64 bg-pink-200/30 rounded-full blur-3xl -z-10" />
-          <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -z-10" />
-        </motion.div>
+
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light text-foreground mb-8 leading-[0.95] tracking-tight">
+              Walking in <br />
+              <span className="italic text-primary/90">Divine Freedom</span>
+            </h1>
+            
+            <div className="space-y-6 mb-10 text-muted-foreground text-lg md:text-xl max-w-xl font-light leading-relaxed border-l-2 border-primary/10 pl-6">
+              <p>
+                A dedicated Deliverance Minister and Teacher of the Word. 
+                Serving the body of Christ as a Worship & Music Minister, while offering guidance as a trusted Mediator, Counselor, and Mentor.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-5">
+              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-none px-8 h-14 text-base tracking-wide">
+                Start Your Journey
+              </Button>
+              <Button size="lg" variant="ghost" className="rounded-none px-8 h-14 text-base group hover:bg-primary/5">
+                <PlayCircle className="mr-3 w-5 h-5 text-primary" />
+                Latest Sermon
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Image Content - Spans 5 columns */}
+          <motion.div 
+            className="lg:col-span-5 relative"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+          >
+            <div className="relative z-10">
+              {/* Main Image with Modern Masking */}
+              <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100">
+                <img
+                  src={portrait}
+                  alt="Rev. Tom Otieno"
+                  className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000"
+                />
+                {/* Glassmorphism Card Overlay */}
+                <div className="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-xl border border-white/20 p-6 text-white">
+                  <p className="font-serif text-2xl italic">"Truth sets you free."</p>
+                  <p className="text-xs uppercase tracking-widest mt-2 opacity-80">Anglican Church of Kenya</p>
+                </div>
+              </div>
+              
+              {/* Architectural Elements */}
+              <div className="absolute -top-12 -right-12 w-full h-full border border-primary/20 -z-10 hidden md:block" />
+              <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-accent/50 -z-10 rounded-full blur-2xl" />
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
