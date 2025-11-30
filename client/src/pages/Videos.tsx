@@ -6,17 +6,25 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { allVideos } from "@/lib/data";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Videos() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const { data: allVideos = [] } = useQuery({
+    queryKey: ["videos"],
+    queryFn: async () => {
+      const res = await fetch("/api/videos");
+      return res.json();
+    },
+  });
+
   const categories = ["All", "Sermon", "Teaching", "Worship"];
 
   // Filter videos based on search query and selected category
-  const filteredVideos = allVideos.filter(video => {
+  const filteredVideos = allVideos.filter((video: any) => {
     const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === "All" || video.category === activeCategory;
     return matchesSearch && matchesCategory;
@@ -61,7 +69,7 @@ export default function Videos() {
 
         {/* Video Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredVideos.map((video, index) => (
+          {filteredVideos.map((video: any, index: number) => (
             <motion.div
               key={video.id}
               initial={{ opacity: 0, y: 20 }}

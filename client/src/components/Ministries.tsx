@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Heart, Moon, Shield, GraduationCap, ArrowUpRight, CalendarDays, AlertCircle } from "lucide-react";
+import { Heart, Moon, Shield, GraduationCap, ArrowUpRight, CalendarDays, AlertCircle, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 // Registration status types for ministry programs
 type RegistrationStatus = 'open' | 'closed' | 'upcoming';
@@ -68,6 +69,42 @@ export default function Ministries() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [selectedMinistry, setSelectedMinistry] = useState<Ministry | null>(null);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+
+  const { data: ministrySettings } = useQuery({
+    queryKey: ["ministrySettings"],
+    queryFn: async () => {
+      const res = await fetch("/api/ministry-settings");
+      return res.json();
+    },
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: async (registration: any) => {
+      const res = await fetch("/api/registrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registration),
+      });
+      if (!res.ok) throw new Error("Registration failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      setOpen(false);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      toast({
+        title: "Registration Successful",
+        description: `Thank you for registering for ${selectedMinistry?.title}. We will contact you shortly.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Registration Failed",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleRegister = (ministry: Ministry) => {
     if (ministry.registrationLink) {
@@ -90,10 +127,21 @@ export default function Ministries() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setOpen(false);
-    toast({
-      title: "Registration Received",
-      description: `Thank you for registering for ${selectedMinistry?.title}. We will contact you shortly.`,
+    if (!selectedMinistry) return;
+    
+    const ministryTypeMap: Record<string, string> = {
+      "Deal to Heal": "deal-to-heal",
+      "Understanding Dreams": "understanding-dreams",
+      "Deliverance Ministry": "deliverance",
+      "Master Class": "master-class",
+    };
+
+    registerMutation.mutate({
+      ministryType: ministryTypeMap[selectedMinistry.title] || selectedMinistry.title.toLowerCase().replace(/\s+/g, "-"),
+      fullName: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
     });
   };
 
@@ -213,17 +261,23 @@ export default function Ministries() {
           <form onSubmit={handleSubmit} className="grid gap-6 py-4">
             <div className="grid gap-2">
               <Label htmlFor="name" className="text-xs uppercase tracking-widest">Full Name</Label>
-              <Input id="name" placeholder="John Doe" required className="rounded-none h-12 bg-secondary/20 border-border/50" />
+              <Input id="name" placeholder="John Doe" required className="rounded-none h-12 bg-secondary/20 border-border/50" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email" className="text-xs uppercase tracking-widest">Email Address</Label>
-              <Input id="email" type="email" placeholder="john@example.com" required className="rounded-none h-12 bg-secondary/20 border-border/50" />
+              <Input id="email" type="email" placeholder="john@example.com" required className="rounded-none h-12 bg-secondary/20 border-border/50" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="phone" className="text-xs uppercase tracking-widest">Phone Number</Label>
-              <Input id="phone" type="tel" placeholder="+254..." required className="rounded-none h-12 bg-secondary/20 border-border/50" />
+              <Input id="phone" type="tel" placeholder="+254..." required className="rounded-none h-12 bg-secondary/20 border-border/50" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
             </div>
-            <Button type="submit" className="w-full bg-primary text-white rounded-none h-12">Confirm Registration</Button>
+            <Button type="submit" disabled={registerMutation.isPending} className="w-full bg-primary text-white rounded-none h-12">
+              {registerMutation.isPending ? (
+                <><Loader2 className="mr-2 w-4 h-4 animate-spin" />Registering...</>
+              ) : (
+                "Confirm Registration"
+              )}
+            </Button>
           </form>
         </DialogContent>
       </Dialog>

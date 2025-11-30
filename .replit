@@ -45,3 +45,9 @@ waitForPort = 5000
 
 [agent]
 mockupState = "FULLSTACK"
+
+[userenv]
+
+[userenv.shared]
+GMAIL_USER = "revtotieno@gmail.com"
+GMAIL_APP_PASSWORD = "placeholder_app_password"

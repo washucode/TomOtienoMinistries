@@ -4,14 +4,22 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { useLocation } from "wouter";
-import { allVideos } from "@/lib/data";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Sermons() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [, setLocation] = useLocation();
 
+  const { data: videos = [] } = useQuery({
+    queryKey: ["videos"],
+    queryFn: async () => {
+      const res = await fetch("/api/videos");
+      return res.json();
+    },
+  });
+
   // Take first 3 videos for the home page display
-  const recentVideos = allVideos.slice(0, 3);
+  const recentVideos = videos.slice(0, 3);
 
   return (
     <section className="py-24 bg-background">
@@ -41,7 +49,7 @@ export default function Sermons() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {recentVideos.map((video, index) => (
+            {recentVideos.map((video: any, index: number) => (
               <motion.div
                 key={video.id}
                 initial={{ opacity: 0, y: 20 }}
