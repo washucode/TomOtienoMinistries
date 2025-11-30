@@ -34,8 +34,10 @@ export interface IStorage {
 
   // Registration methods
   getAllRegistrations(): Promise<Registration[]>;
+  getRegistration(id: string): Promise<Registration | undefined>;
   getRegistrationsByMinistry(ministryType: string): Promise<Registration[]>;
   createRegistration(registration: InsertRegistration): Promise<Registration>;
+  updateRegistration(id: string, registration: Partial<Registration>): Promise<Registration | undefined>;
   deleteRegistration(id: string): Promise<boolean>;
 
   // Ministry Settings methods
@@ -92,6 +94,11 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(registrations).orderBy(desc(registrations.createdAt));
   }
 
+  async getRegistration(id: string): Promise<Registration | undefined> {
+    const result = await db.select().from(registrations).where(eq(registrations.id, id));
+    return result[0];
+  }
+
   async getRegistrationsByMinistry(ministryType: string): Promise<Registration[]> {
     return db
       .select()
@@ -102,6 +109,11 @@ export class DatabaseStorage implements IStorage {
 
   async createRegistration(registration: InsertRegistration): Promise<Registration> {
     const result = await db.insert(registrations).values(registration).returning();
+    return result[0];
+  }
+
+  async updateRegistration(id: string, registration: Partial<Registration>): Promise<Registration | undefined> {
+    const result = await db.update(registrations).set(registration).where(eq(registrations.id, id)).returning();
     return result[0];
   }
 

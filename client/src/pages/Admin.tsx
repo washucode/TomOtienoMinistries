@@ -54,6 +54,8 @@ export default function Admin() {
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
   const [editSettingsOpen, setEditSettingsOpen] = useState(false);
   const [editingSettings, setEditingSettings] = useState<MinistrySettings | null>(null);
+  const [editRegOpen, setEditRegOpen] = useState(false);
+  const [editingReg, setEditingReg] = useState<Registration | null>(null);
   const [filterMinistry, setFilterMinistry] = useState("all");
   const [videoForm, setVideoForm] = useState({
     title: "",
@@ -71,6 +73,12 @@ export default function Admin() {
     location: "",
     capacity: 50,
     currentRegistrations: 0,
+  });
+  const [regForm, setRegForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    message: "",
   });
 
   const { data: videos = [], isLoading: videosLoading, isError: videosError } = useQuery<Video[]>({
@@ -192,6 +200,27 @@ export default function Admin() {
     },
   });
 
+  const updateRegMutation = useMutation({
+    mutationFn: async (reg: { id: string; fullName: string; email: string; phone: string; message?: string }) => {
+      const res = await fetch(`/api/registrations/${reg.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName: reg.fullName, email: reg.email, phone: reg.phone, message: reg.message }),
+      });
+      if (!res.ok) throw new Error("Failed to update registration");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["registrations"] });
+      setEditRegOpen(false);
+      setEditingReg(null);
+      toast({ title: "Registration Updated", description: "Registration has been updated." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to update registration.", variant: "destructive" });
+    },
+  });
+
   const extractVideoId = (url: string) => {
     const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
     return match ? match[1] : url;
@@ -259,6 +288,26 @@ export default function Admin() {
     updateSettingsMutation.mutate({
       ...settingsForm,
       currentRegistrations: editingSettings?.currentRegistrations || 0,
+    });
+  };
+
+  const openRegEditDialog = (reg: Registration) => {
+    setEditingReg(reg);
+    setRegForm({
+      fullName: reg.fullName,
+      email: reg.email,
+      phone: reg.phone,
+      message: reg.message || "",
+    });
+    setEditRegOpen(true);
+  };
+
+  const handleUpdateReg = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingReg) return;
+    updateRegMutation.mutate({
+      id: editingReg.id,
+      ...regForm,
     });
   };
 
@@ -566,7 +615,15 @@ export default function Admin() {
                             <Badge variant="outline">{ministryLabels[reg.ministryType] || reg.ministryType}</Badge>
                           </TableCell>
                           <TableCell>{new Date(reg.createdAt).toLocaleDateString()}</TableCell>
-                          <TableCell className="text-right">
+                          <TableCell className="text-right space-x-2">
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => openRegEditDialog(reg)}
+                              data-testid={`button-edit-registration-${reg.id}`}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
                             <Button 
                               variant="ghost" 
                               size="icon"
@@ -778,6 +835,63 @@ export default function Admin() {
               </div>
               <Button type="submit" className="w-full bg-primary text-white" disabled={updateSettingsMutation.isPending} data-testid="button-update-settings">
                 {updateSettingsMutation.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Updating...</> : "Update Settings"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={editRegOpen} onOpenChange={setEditRegOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle className="font-serif text-xl">Edit Registration</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleUpdateReg} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="reg-name">Full Name</Label>
+                <Input
+                  id="reg-name"
+                  placeholder="Full name"
+                  value={regForm.fullName}
+                  onChange={(e) => setRegForm({ ...regForm, fullName: e.target.value })}
+                  required
+                  data-testid="input-reg-name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="reg-email">Email</Label>
+                <Input
+                  id="reg-email"
+                  type="email"
+                  placeholder="email@example.com"
+                  value={regForm.email}
+                  onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+                  required
+                  data-testid="input-reg-email"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="reg-phone">Phone</Label>
+                <Input
+                  id="reg-phone"
+                  placeholder="+254..."
+                  value={regForm.phone}
+                  onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
+                  required
+                  data-testid="input-reg-phone"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="reg-message">Message</Label>
+                <Input
+                  id="reg-message"
+                  placeholder="Optional message"
+                  value={regForm.message}
+                  onChange={(e) => setRegForm({ ...regForm, message: e.target.value })}
+                  data-testid="input-reg-message"
+                />
+              </div>
+              <Button type="submit" className="w-full bg-primary text-white" disabled={updateRegMutation.isPending} data-testid="button-update-registration">
+                {updateRegMutation.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Updating...</> : "Update Registration"}
               </Button>
             </form>
           </DialogContent>

@@ -126,6 +126,32 @@ export async function registerRoutes(
     }
   });
 
+  app.put("/api/registrations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { fullName, email, phone, message } = req.body;
+      
+      const updatedData: any = {};
+      if (fullName !== undefined) updatedData.fullName = fullName;
+      if (email !== undefined) updatedData.email = email;
+      if (phone !== undefined) updatedData.phone = phone;
+      if (message !== undefined) updatedData.message = message;
+      
+      const registration = await storage.getRegistration(id);
+      if (!registration) {
+        return res.status(404).json({ error: "Registration not found" });
+      }
+      
+      const updated = { ...registration, ...updatedData };
+      const result = await storage.updateRegistration(id, updated);
+      
+      res.json(result);
+    } catch (error) {
+      console.error("Error updating registration:", error);
+      res.status(500).json({ error: "Failed to update registration" });
+    }
+  });
+
   app.delete("/api/registrations/:id", async (req, res) => {
     try {
       const { id } = req.params;
