@@ -24,8 +24,8 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Montserrat', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
   
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -34,9 +34,9 @@
 }
 
 :root {
-  /* Blue and Light Pink Theme */
-  --background: 210 30% 98%; /* Very light blue-ish white */
-  --foreground: 222 47% 11%; /* Deep Navy */
+  /* Royal Blue and Elegant Theme */
+  --background: 210 30% 99%; 
+  --foreground: 222 47% 11%;
 
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
@@ -44,33 +44,33 @@
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
 
-  /* Primary: Trustworthy Blue */
-  --primary: 215 85% 45%; 
+  /* Primary: Deep Royal Blue */
+  --primary: 225 73% 45%; 
   --primary-foreground: 0 0% 100%;
 
-  /* Secondary: Light Pink (for backgrounds/accents) */
-  --secondary: 330 100% 96%;
-  --secondary-foreground: 330 60% 40%;
+  /* Secondary: Very Light Royal/Periwinkle */
+  --secondary: 225 50% 96%;
+  --secondary-foreground: 225 73% 30%;
 
   --muted: 210 40% 96%;
   --muted-foreground: 215 16% 47%;
 
-  /* Accent: Softer Pink */
-  --accent: 330 80% 90%;
-  --accent-foreground: 330 60% 30%;
+  /* Accent: Soft Gold/Sand to complement Royal Blue */
+  --accent: 40 50% 90%;
+  --accent-foreground: 40 50% 30%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 215 85% 45%;
+  --ring: 225 73% 45%;
 
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 222 47% 11%; /* Deep Navy */
+  --background: 222 47% 11%;
   --foreground: 210 40% 98%;
 
   --card: 217 33% 17%;
@@ -79,24 +79,24 @@
   --popover: 222 47% 11%;
   --popover-foreground: 210 40% 98%;
 
-  --primary: 215 85% 60%; /* Brighter Blue for dark mode */
+  --primary: 225 73% 60%;
   --primary-foreground: 222 47% 11%;
 
-  --secondary: 330 30% 20%;
-  --secondary-foreground: 330 80% 90%;
+  --secondary: 225 30% 20%;
+  --secondary-foreground: 225 80% 90%;
 
   --muted: 217 19% 27%;
   --muted-foreground: 215 20% 65%;
 
-  --accent: 330 30% 20%;
-  --accent-foreground: 330 80% 90%;
+  --accent: 40 30% 20%;
+  --accent-foreground: 40 80% 90%;
 
   --destructive: 0 62% 30%;
   --destructive-foreground: 210 40% 98%;
 
   --border: 217 19% 27%;
   --input: 217 19% 27%;
-  --ring: 215 85% 60%;
+  --ring: 225 73% 60%;
 }
 
 @layer base {
