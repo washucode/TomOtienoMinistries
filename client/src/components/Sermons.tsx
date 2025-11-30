@@ -8,30 +8,30 @@ import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui
 const videoSermons = [
   {
     id: "video1",
-    title: "Understanding Spiritual Altars",
-    date: "Nov 24, 2024",
-    duration: "1:15:20",
-    thumbnail: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2070&auto=format&fit=crop",
-    views: "1.2K views",
-    videoId: "M7lc1UVf-VE" // Example YouTube ID
+    title: "God's Abundant Mercy",
+    date: "Latest Release",
+    duration: "45:20",
+    thumbnail: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop",
+    views: "YouTube",
+    videoId: "M7lc1UVf-VE" // Placeholder ID
   },
   {
     id: "video2",
-    title: "Breaking Generational Curses",
-    date: "Nov 17, 2024",
+    title: "Understanding Holiness",
+    date: "Teaching Series",
     duration: "58:45",
-    thumbnail: "https://images.unsplash.com/photo-1490122417551-6ee9691429d0?q=80&w=2070&auto=format&fit=crop",
-    views: "2.5K views",
-    videoId: "M7lc1UVf-VE" // Example YouTube ID
+    thumbnail: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop",
+    views: "YouTube",
+    videoId: "M7lc1UVf-VE" // Placeholder ID
   },
   {
     id: "video3",
-    title: "The Mystery of Dreams",
-    date: "Nov 10, 2024",
+    title: "The Power of Prayer",
+    date: "Sunday Service",
     duration: "1:02:10",
-    thumbnail: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop",
-    views: "3.1K views",
-    videoId: "M7lc1UVf-VE" // Example YouTube ID
+    thumbnail: "https://images.unsplash.com/photo-1445445290350-16a63cfaf720?q=80&w=2070&auto=format&fit=crop",
+    views: "YouTube",
+    videoId: "M7lc1UVf-VE" // Placeholder ID
   }
 ];
 
@@ -87,7 +87,11 @@ export default function Sermons() {
             <h3 className="text-2xl font-serif text-primary flex items-center gap-2">
               <PlayCircle className="w-6 h-6" /> Latest Video Messages
             </h3>
-            <Button variant="ghost" className="text-primary hover:text-primary/80">
+            <Button 
+              variant="ghost" 
+              className="text-primary hover:text-primary/80"
+              onClick={() => window.open("https://www.youtube.com/results?search_query=rev+tom+otieno", "_blank")}
+            >
               View All Videos
             </Button>
           </div>
