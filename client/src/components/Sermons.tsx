@@ -3,37 +3,8 @@ import { PlayCircle, Headphones, Calendar, Clock, ExternalLink, X } from "lucide
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
-
-// Placeholder video IDs - In a real app, these would be actual IDs from Rev. Tom's channel
-const videoSermons = [
-  {
-    id: "video1",
-    title: "God's Abundant Mercy",
-    date: "Latest Release",
-    duration: "45:20",
-    thumbnail: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop",
-    views: "YouTube",
-    videoId: "M7lc1UVf-VE" // Placeholder ID
-  },
-  {
-    id: "video2",
-    title: "Understanding Holiness",
-    date: "Teaching Series",
-    duration: "58:45",
-    thumbnail: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073&auto=format&fit=crop",
-    views: "YouTube",
-    videoId: "M7lc1UVf-VE" // Placeholder ID
-  },
-  {
-    id: "video3",
-    title: "The Power of Prayer",
-    date: "Sunday Service",
-    duration: "1:02:10",
-    thumbnail: "https://images.unsplash.com/photo-1445445290350-16a63cfaf720?q=80&w=2070&auto=format&fit=crop",
-    views: "YouTube",
-    videoId: "M7lc1UVf-VE" // Placeholder ID
-  }
-];
+import { useLocation } from "wouter";
+import { allVideos } from "@/lib/data";
 
 const audioSermons = [
   {
@@ -68,6 +39,10 @@ const audioSermons = [
 
 export default function Sermons() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
+
+  // Take first 3 videos for the home page display
+  const recentVideos = allVideos.slice(0, 3);
 
   return (
     <section className="py-24 bg-background">
@@ -90,14 +65,14 @@ export default function Sermons() {
             <Button 
               variant="ghost" 
               className="text-primary hover:text-primary/80"
-              onClick={() => window.open("https://www.youtube.com/results?search_query=rev+tom+otieno", "_blank")}
+              onClick={() => setLocation("/videos")}
             >
               View All Videos
             </Button>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {videoSermons.map((video, index) => (
+            {recentVideos.map((video, index) => (
               <motion.div
                 key={video.id}
                 initial={{ opacity: 0, y: 20 }}
