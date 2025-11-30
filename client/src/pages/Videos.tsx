@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function Videos() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const { data: allVideos = [] } = useQuery({
     queryKey: ["videos"],
@@ -21,14 +21,27 @@ export default function Videos() {
     },
   });
 
-  const categories = ["All", "Sermon", "Teaching", "Worship"];
+  // Get unique categories from videos, plus always include "All"
+  const uniqueCategories: string[] = Array.from(
+    new Set((allVideos as any[]).map((v: any) => v.category as string).filter((c: any) => Boolean(c)))
+  ).sort();
+  const categories: string[] = ["All", ...uniqueCategories];
+
+  // Set default category to "All" if not set yet
+  const currentCategory = activeCategory || "All";
 
   // Filter videos based on search query and selected category
   const filteredVideos = allVideos.filter((video: any) => {
     const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === "All" || video.category === activeCategory;
+    const matchesCategory = currentCategory === "All" || video.category === currentCategory;
     return matchesSearch && matchesCategory;
   });
+
+  // Generate YouTube thumbnail URL if not provided
+  const getVideoThumbnail = (videoId: string, thumbnail?: string) => {
+    if (thumbnail) return thumbnail;
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  };
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
@@ -53,12 +66,13 @@ export default function Videos() {
               />
             </div>
             <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
-              {categories.map(cat => (
+              {categories.map((cat: string) => (
                 <Button
                   key={cat}
-                  variant={activeCategory === cat ? "default" : "outline"}
+                  variant={currentCategory === cat ? "default" : "outline"}
                   onClick={() => setActiveCategory(cat)}
-                  className={`rounded-none h-12 px-6 ${activeCategory === cat ? 'bg-primary text-white' : 'border-border/50'}`}
+                  className={`rounded-none h-12 px-6 ${currentCategory === cat ? 'bg-primary text-white' : 'border-border/50'}`}
+                  data-testid={`button-filter-${cat.toLowerCase()}`}
                 >
                   {cat}
                 </Button>
@@ -77,12 +91,17 @@ export default function Videos() {
               transition={{ delay: index * 0.05 }}
               className="group cursor-pointer"
               onClick={() => setSelectedVideo(video.videoId)}
+              data-testid={`card-video-${video.id}`}
             >
               <div className="relative aspect-video bg-secondary/20 mb-4 overflow-hidden rounded-none">
                 <img 
-                  src={video.thumbnail} 
+                  src={getVideoThumbnail(video.videoId, video.thumbnail)} 
                   alt={video.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  data-testid={`img-video-thumbnail-${video.id}`}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -98,7 +117,7 @@ export default function Videos() {
                   </div>
                 )}
               </div>
-              <h3 className="font-serif text-xl font-medium mb-2 group-hover:text-primary transition-colors">
+              <h3 className="font-serif text-xl font-medium mb-2 group-hover:text-primary transition-colors" data-testid={`text-video-title-${video.id}`}>
                 {video.title}
               </h3>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -116,7 +135,8 @@ export default function Videos() {
             <Button 
               variant="link" 
               className="text-primary mt-2"
-              onClick={() => {setSearchQuery(""); setActiveCategory("All");}}
+              onClick={() => {setSearchQuery(""); setActiveCategory(null);}}
+              data-testid="button-clear-filters"
             >
               Clear filters
             </Button>
