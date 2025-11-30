@@ -576,7 +576,12 @@ export default function Admin() {
                       <SelectContent>
                         <SelectItem value="Sermon">Sermon</SelectItem>
                         <SelectItem value="Teaching">Teaching</SelectItem>
+                        <SelectItem value="Deliverance">Deliverance</SelectItem>
+                        <SelectItem value="Healing">Healing</SelectItem>
+                        <SelectItem value="Family">Family</SelectItem>
+                        <SelectItem value="Parenting">Parenting</SelectItem>
                         <SelectItem value="Worship">Worship</SelectItem>
+                        <SelectItem value="Church">Church</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1037,7 +1042,12 @@ export default function Admin() {
                     <SelectContent>
                       <SelectItem value="Sermon">Sermon</SelectItem>
                       <SelectItem value="Teaching">Teaching</SelectItem>
+                      <SelectItem value="Deliverance">Deliverance</SelectItem>
+                      <SelectItem value="Healing">Healing</SelectItem>
+                      <SelectItem value="Family">Family</SelectItem>
+                      <SelectItem value="Parenting">Parenting</SelectItem>
                       <SelectItem value="Worship">Worship</SelectItem>
+                      <SelectItem value="Church">Church</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
