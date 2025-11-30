@@ -45,7 +45,7 @@ export default function Proskuneo() {
             </div>
           </div>
 
-          <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 h-14 text-lg border-none shadow-[0_0_30px_-5px_rgba(234,179,8,0.4)]">
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 h-14 text-lg border-none shadow-[0_0_30px_-5px_rgba(59,130,246,0.4)]">
             Save My Seat
           </Button>
         </div>

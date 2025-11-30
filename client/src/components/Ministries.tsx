@@ -34,8 +34,8 @@ const ministries = [
     title: "Master Class Deliverance",
     description: "A full-year intensive course for those called to the ministry of deliverance. Registration open for January.",
     icon: GraduationCap,
-    color: "text-amber-500",
-    bg: "bg-amber-500/10",
+    color: "text-purple-500",
+    bg: "bg-purple-500/10",
     featured: true,
   },
 ];
