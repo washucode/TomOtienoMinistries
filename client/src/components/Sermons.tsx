@@ -1,31 +1,37 @@
 import { Button } from "@/components/ui/button";
-import { PlayCircle, Headphones, Calendar, Clock, ExternalLink } from "lucide-react";
+import { PlayCircle, Headphones, Calendar, Clock, ExternalLink, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 
+// Placeholder video IDs - In a real app, these would be actual IDs from Rev. Tom's channel
 const videoSermons = [
   {
-    id: 1,
+    id: "video1",
     title: "Understanding Spiritual Altars",
     date: "Nov 24, 2024",
     duration: "1:15:20",
     thumbnail: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2070&auto=format&fit=crop",
-    views: "1.2K views"
+    views: "1.2K views",
+    videoId: "M7lc1UVf-VE" // Example YouTube ID
   },
   {
-    id: 2,
+    id: "video2",
     title: "Breaking Generational Curses",
     date: "Nov 17, 2024",
     duration: "58:45",
     thumbnail: "https://images.unsplash.com/photo-1490122417551-6ee9691429d0?q=80&w=2070&auto=format&fit=crop",
-    views: "2.5K views"
+    views: "2.5K views",
+    videoId: "M7lc1UVf-VE" // Example YouTube ID
   },
   {
-    id: 3,
+    id: "video3",
     title: "The Mystery of Dreams",
     date: "Nov 10, 2024",
     duration: "1:02:10",
     thumbnail: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop",
-    views: "3.1K views"
+    views: "3.1K views",
+    videoId: "M7lc1UVf-VE" // Example YouTube ID
   }
 ];
 
@@ -61,6 +67,8 @@ const audioSermons = [
 ];
 
 export default function Sermons() {
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -93,6 +101,7 @@ export default function Sermons() {
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="group cursor-pointer"
+                onClick={() => setSelectedVideo(video.videoId)}
               >
                 <div className="relative aspect-video bg-secondary/20 mb-4 overflow-hidden rounded-none">
                   <img 
@@ -163,6 +172,31 @@ export default function Sermons() {
             ))}
           </div>
         </div>
+
+        {/* Video Player Modal */}
+        <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
+          <DialogContent className="sm:max-w-4xl p-0 bg-black border-none overflow-hidden rounded-lg">
+            <DialogTitle className="sr-only">Video Player</DialogTitle>
+            <div className="aspect-video w-full">
+              {selectedVideo && (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                ></iframe>
+              )}
+            </div>
+            <DialogClose className="absolute top-4 right-4 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors">
+              <X className="w-4 h-4" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
