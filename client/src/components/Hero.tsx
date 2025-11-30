@@ -16,7 +16,7 @@ export default function Hero() {
 
       <div className="container relative z-10 px-4 mx-auto">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
-          {/* Text Content - Spans 7 columns */}
+          {/* Text Content - Spans 7 columns with animation */}
           <motion.div 
             className="lg:col-span-7 pt-20 lg:pt-0"
             initial={{ opacity: 0, y: 40 }}

@@ -16,6 +16,7 @@ export default function Navbar() {
     { name: "Contact", href: "#contact" },
   ];
 
+  // Scroll to section handler for smooth navigation
   const scrollToSection = (id: string) => {
     const element = document.querySelector(id);
     if (element) {

@@ -15,6 +15,7 @@ export default function Videos() {
 
   const categories = ["All", "Sermon", "Teaching", "Worship"];
 
+  // Filter videos based on search query and selected category
   const filteredVideos = allVideos.filter(video => {
     const matchesSearch = video.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === "All" || video.category === activeCategory;

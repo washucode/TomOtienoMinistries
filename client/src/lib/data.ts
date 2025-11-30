@@ -1,3 +1,4 @@
+// Data interface for video items
 export interface Video {
   id: string;
   title: string;
@@ -9,6 +10,7 @@ export interface Video {
   category?: string;
 }
 
+// Centralized video data for easy management
 export const allVideos: Video[] = [
   {
     id: "v1",

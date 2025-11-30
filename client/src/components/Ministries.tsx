@@ -8,8 +8,10 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
+// Registration status types for ministry programs
 type RegistrationStatus = 'open' | 'closed' | 'upcoming';
 
+// Ministry data interface with registration details
 interface Ministry {
   title: string;
   description: string;

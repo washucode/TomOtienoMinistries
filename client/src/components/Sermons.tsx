@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui
 import { useLocation } from "wouter";
 import { allVideos } from "@/lib/data";
 
+// Audio sermon data (Podcast style)
 const audioSermons = [
   {
     id: 1,
